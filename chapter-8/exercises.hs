@@ -95,15 +95,16 @@ dividedBy num denom = go num denom 0
             | n < d = (count, n)
             | otherwise = go (n - d) d (count + 1)
 
-data DividedResult = Result Integer | DividedByZero deriving Show
+data DividedResult a = Result (a, a) | DividedByZero deriving Show
 
-dividedBy' :: Integral a => a -> a -> DividedResult
-dividedBy' num denom = go num denom 0
-    where go n d count
-            | d == 0 = DividedByZero
-            | d < 0 = go n (-d) count
-            | n < 0 = go (-n) d count
-            | n < d = Result count
+dividedBy' :: Integral a => a -> a -> DividedResult a
+dividedBy' num 0 = DividedByZero
+dividedBy' num denom = Result (go num denom 0)
+    where go :: Integral a => a -> a -> a -> (a, a)
+          go n d count
+            | d < 0 = let (x, y) = go n (-d) count in (-x, y)
+            | n < 0 = let (x, y) = go (-n) d count in (-x, y)
+            | n < d = (count, n)
             | otherwise = go (n - d) d (count + 1)
 
 mc91 x
