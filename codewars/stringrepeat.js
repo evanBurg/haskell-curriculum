@@ -1,0 +1,1 @@
+const repeatString = (num, string) => Array(num).fill(string).join("");
